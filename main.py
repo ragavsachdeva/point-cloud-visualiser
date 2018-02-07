@@ -1,4 +1,17 @@
+import os
+import argparse
 
+cloud_file = "default_cloud.ply"
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--filename", help="Please provide the name of the point cloud file.")
+args = parser.parse_args()
+if args.filename:
+	cloud_file = args.filename
+
+file = open('index.html','w')
+
+message = """
 <!DOCTYPE html>
 
 <head>
@@ -122,7 +135,7 @@
             var material;
             var figure;
             loader = new THREE.PLYLoader();
-            loader.load('default_cloud.ply', (geometry) => {
+            loader.load('""" + cloud_file+ """', (geometry) => {
                 console.log(geometry);
 
                 material = new THREE.PointsMaterial({
@@ -239,3 +252,9 @@
 
 </html>
 
+"""
+
+file.write(message)
+file.close()
+
+os.system("python3 -m http.server")
