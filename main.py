@@ -1,5 +1,6 @@
 import os
 import argparse
+from plyfile import PlyData, PlyElement
 
 cloud_file = "default_cloud.ply"
 
@@ -7,7 +8,27 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--filename", help="Please provide the name of the point cloud file.")
 args = parser.parse_args()
 if args.filename:
-	cloud_file = args.filename
+    cloud_file = args.filename
+
+plydata = PlyData.read(cloud_file)
+x_min = min(plydata.elements[0].data['x'])
+x_max = max(plydata.elements[0].data['x'])
+y_min = min(plydata.elements[0].data['y'])
+y_max = max(plydata.elements[0].data['y'])
+z_min = min(plydata.elements[0].data['z'])
+z_max = max(plydata.elements[0].data['z'])
+
+c_x = (x_min + x_max)/2
+c_y = (y_min + y_max)/2
+c_z = z_min - (z_max - z_min + max(x_max-x_min, y_max-y_min))
+
+l_x = (x_min + x_max)/2
+l_y = (y_min + y_max)/2
+l_z = z_min
+
+with open("config.json", "w") as cf:
+    configSettings = '{"filename": "'+cloud_file[:-4]+'", "camera_position": ['+str(c_x)+', '+str(c_y)+', '+str(c_z)+'], "look_at": ['+str(l_x)+', '+str(l_y)+', '+str(l_z)+'], "point_size": 0.01, "point_opacity": 1}'
+    cf.write(str(configSettings))
 
 file = open('index.html','w')
 
@@ -168,17 +189,17 @@ message = """
             //
             renderer = new THREE.WebGLRenderer({
                 antialias: false,
-				preserveDrawingBuffer: true                
+                preserveDrawingBuffer: true                
             });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);
-			//
-			// SCREENSHOT
-			//
-			$("#screenshot").click(function() {
-			    window.open( renderer.domElement.toDataURL("image/png"), "Final");
-			    return false;
-			});            
+            //
+            // SCREENSHOT
+            //
+            $("#screenshot").click(function() {
+                window.open( renderer.domElement.toDataURL("image/png"), "Final");
+                return false;
+            });            
             //
             // ORBIT CONTROLS
             //
