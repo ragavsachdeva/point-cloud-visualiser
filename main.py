@@ -1,8 +1,9 @@
 import os
 import argparse
+import math
 from plyfile import PlyData, PlyElement
 
-cloud_file = "default_cloud.ply"
+cloud_file = "skull.ply"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--filename", help="Please provide the name of the point cloud file.")
@@ -19,16 +20,17 @@ z_min = min(plydata.elements[0].data['z'])
 z_max = max(plydata.elements[0].data['z'])
 
 #Tweak these parameters to adjust the initial camera position
+
 c_x = (x_min + x_max)/2
 c_z = (y_min + y_max)/2
-c_y = z_min - (z_max - z_min + max(x_max-x_min, y_max-y_min))
+c_y = (z_min - (z_max - z_min + max(x_max-x_min, y_max-y_min)))
 
 l_x = (x_min + x_max)/2
-l_y = (y_min + y_max)/2
-l_z = z_min
+l_z = (y_min + y_max)/2
+l_y = z_min
 
 with open("config.json", "w") as cf:
-    configSettings = '{"filename": "'+cloud_file[:-4]+'", "camera_position": ['+str(c_x)+', '+str(c_y)+', '+str(c_z)+'], "look_at": ['+str(l_x)+', '+str(l_y)+', '+str(l_z)+'], "point_size": 0.01, "point_opacity": 1}'
+    configSettings = '{"filename": "'+cloud_file[:-4]+'", "camera_position": ['+str(c_x)+', '+str(c_y)+', '+str(c_z)+'], "look_at": ['+str(l_x)+', '+str(l_y)+', '+str(l_z)+'], "point_size": 0.2, "point_opacity": 1}'
     cf.write(str(configSettings))
 
 file = open('index.html','w')
@@ -186,7 +188,7 @@ message = """
             //
             // Lines
             //
-            // drawLines(scene, config.lines, config.line_color_list)
+            //drawLines(scene, config.lines, config.line_color_list)
             //
             // CAMERA
             //
