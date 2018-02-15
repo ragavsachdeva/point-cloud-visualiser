@@ -50,7 +50,7 @@ end_header
 
 * 360° rotation is only possible horizontally. Vertical rotation is restricted to 180°. It is a limitation of the three.js.
 
-* Furthermore, "horizontal" rotation is always along z-axis. Modify your .ply file accordingly.
+* Furthermore, "horizontal" rotation is always about z-axis. Modify your .ply file accordingly.
 
 ## Author
 
