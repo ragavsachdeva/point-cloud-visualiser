@@ -42,7 +42,7 @@ property uchar red
 property uchar green
 property uchar blue
 end_header
-x y z r g b
+[x] [y] [z] [r] [g] [b]
 .
 .
 .
